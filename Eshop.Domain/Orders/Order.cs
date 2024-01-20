@@ -13,6 +13,8 @@ namespace Eshop.Domain.Orders
 
         public List<OrderProduct> Products { get; private set; }
 
+
+
         private Order(Guid customerId, List<OrderProduct> orderProducts)
         {
             Id = Guid.NewGuid();
@@ -25,7 +27,9 @@ namespace Eshop.Domain.Orders
         public static Order Create(
             Guid customerId,
             List<OrderProductData> orderProductsData,
-            List<ProductPriceData> allProductPriceDatas)
+            List<ProductPriceData> allProductPriceDatas,
+            decimal orderCostLimit = 15000)
+
         {
             List<OrderProduct> orderProducts = new();
 
@@ -39,6 +43,9 @@ namespace Eshop.Domain.Orders
             }
 
             CheckRule(new OrderMustHaveAtLeastOneProductRule(orderProducts));
+
+            var totalCost = orderProducts.Sum(op => op.TotalCost);
+            CheckRule(new OrderTotalCostMustNotExceedLimitRule(totalCost, orderCostLimit));
 
             return new Order(customerId, orderProducts);
         }

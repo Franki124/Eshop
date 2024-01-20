@@ -13,6 +13,7 @@ namespace Eshop.Domain.Shared
         public static Customer Create(string name, string email)
         {
             Guid newId = Guid.NewGuid();
+            CheckRule(new UserMustHaveNameRule(name));
             return new Customer(newId, name, email);
         }
 
