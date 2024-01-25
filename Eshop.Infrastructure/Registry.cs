@@ -1,4 +1,5 @@
-﻿using Eshop.Domain.Orders;
+﻿using Eshop.Domain.Customers;
+using Eshop.Domain.Orders;
 using Eshop.Domain.SeedWork;
 using Eshop.Infrastructure.Database;
 using Eshop.Infrastructure.Repositories;
@@ -13,6 +14,8 @@ namespace Eshop.Infrastructure
         public static void RegistryInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<IOrderRepository, OrderRepository>();
+
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
 
             services.AddScoped<IProductPriceDataApi, ProductPriceDataApi>();
 
