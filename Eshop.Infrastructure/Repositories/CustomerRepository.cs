@@ -10,10 +10,12 @@ namespace Eshop.Infrastructure.Repositories
     internal class CustomerRepository : ICustomerRepository
     {
         private readonly CustomersContext _context;
+        private readonly IEntityTracker _entityTracker;
 
-        public CustomerRepository(CustomersContext context)
+        public CustomerRepository(CustomersContext context, IEntityTracker entityTracker)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
+            _entityTracker = entityTracker ?? throw new ArgumentNullException(nameof(entityTracker));
         }
 
         public async Task<Customer> GetByIdAsync(Guid id)
@@ -22,9 +24,9 @@ namespace Eshop.Infrastructure.Repositories
             return await _context.Customers.Find(filter).FirstOrDefaultAsync();
         }
 
-        void ICustomerRepository.Add(Customer customer)
+        public void Add(Customer customer)
         {
-            _context.Customers.InsertOne(customer);
+            _entityTracker.TrackEntity(customer);
         }
     }
 }
